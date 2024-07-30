@@ -24,95 +24,6 @@ def addr_to_bytes(addr, base = 16, sep=":"):
 def packet_dump(packet):
     return " ".join(hex(int(b))[2:].zfill(2) for b in packet )
 
-class ICMPOptionsPrefixInformation:
-    def set_type(self, type_code):
-        self.type = type_code
-    def set_length(self, length):
-        self.length = length
-    def set_prefix_length(self, length):
-        self.prefix_length = struct.pack(">B", length)
-    def set_reserved(self, reserved):
-        self.reserved = reserved
-    def set_valid_lifetime(self, lifetime):
-        self.valid_lifetime = struct.pack(">L", lifetime)
-    def set_preferred_lifetime(self, lifetime):
-        self.preferred_lifetime = struct.pack(">L", lifetime)
-    def set_reserved2(self, reserved):
-        self.reserved2 = reserved
-    def set_prefix(self, prefix):
-        self.prefix = prefix
-
-    def get_header(self):
-        return self.type + self.length + self.prefix_length + self.reserved + self.valid_lifetime + self.preferred_lifetime + self.reserved2 + self.prefix
-
-# DIY Neighbor Solicit
-class ICMPv6:
-    def __init__(self):
-        self.reserved = b"\x00" * 4
-    def set_type(self,type_code):
-        self.type = type_code
-    def set_code(self,code):
-        self.code = code
-    def set_checksum(self, checksum):
-        self.checksum = checksum
-    def set_target_ip(self, address):
-        self.target = address
-    def set_options(self, options):
-        self.options = options
-    def set_reserved(self, reserved):
-        self.reserved = reserved
-    def get_header(self):
-        return self.type + self.code + self.reserved + self.checksum + self.target + self.options
-
-class ICMPOptions: # Source link layer address
-    def set_type(self, type_code):
-        self.type = type_code
-    def set_src_length(self, length):
-        self.src_length = struct.pack(">B", length)
-    def set_src_address(self, address):
-        self.src_address = address
-    def set_dst_length(self, length):
-        self.dst_length = struct.pack(">B", length)
-    def set_dst_address(self, address):
-        self.dst_address = address
-    def get_header(self):
-        return self.type + self.src_length + self.src_address
-    
-class ICMPv6_Router_Advertisement:
-    def __init__(self):
-        self.reserved = b"\x00" * 4
-        
-    def set_type(self,type_code):
-        self.type = type_code
-        
-    def set_code(self,code):
-        self.code = code
-        
-    def set_checksum(self, checksum):
-        self.checksum = checksum
-        
-    def set_current_hop_limit(self, limit):
-        self.hop_lim = struct.pack(">B", limit)
-        
-    def set_reserved(self, reserved_bits):
-        self.reserved = reserved_bits
-        
-    def set_lifetime(self, lifetime): #seconds
-        self.lifetime = struct.pack(">H", lifetime)
-        
-    def set_reach_time(self, reach_time): # milliseconds
-        self.reach_time = struct.pack(">L", reach_time)
-        
-    def set_retrans_time(self, trans_time): #milliseconds
-        self.retrans_time = struct.pack(">L", trans_time)
-        
-    def set_options(self, options):
-        self.options = options
-        
-    def get_header(self):
-        return self.type+ self.code + self.checksum + self.hop_lim + self.reserved + self.lifetime + self.reach_time + self.retrans_time + self.options
-
-
 @dataclass
 class IPv6Header:
     version_class_flow: bytes = b"\x60\x00\x00\x00"
@@ -121,7 +32,7 @@ class IPv6Header:
     src_address: bytes = b"\x00"*16
     dst_address: bytes = b"\x00"*16
 
-    next_header: bytes = None
+    next_header: bytes = b"\x06" # \x3a ICMP  \x06 TCP
 
     def set_payload_len(self, size):
         self.payload_len = struct.pack(">H",size)
@@ -150,13 +61,14 @@ class IPHeader:
     id: bytes = b'\x00' *2
     flags_frag_offset: bytes = b"\x00" * 2
     ttl: bytes = b'\x0f'
-    protocol: bytes = b'\x00' #6 for TCP 1 for ICMP 21 for UDP
+    protocol: bytes = b'\x06' #6 for TCP 1 for ICMP 21 for UDP
     checksum: bytes = b'\x00' * 2
     src_address: bytes = b'\x00' * 4
     dst_address: bytes = b'\x00' * 4
     options: bytes = None
     
     def update_length(self, next_header = None):
+
         octets = len(self.get_header())
 
         octets += len(next_header) if next_header is not None else 0
@@ -218,5 +130,4 @@ class TCPHeader:
             header += self.data
         return header
 
-    
-    
+
