@@ -145,3 +145,4 @@ if __name__ == "__main__":
     parser.add_argument("-dport", "--dest-port", help="Destination Port")
     parser.add_argument("-seq", "--sequence-number", help="Sequence Number")
     parser.add_argument("-if", "--interface", help="Interface To Use")
+    main(parser)
