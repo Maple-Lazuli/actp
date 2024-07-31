@@ -1,0 +1,12 @@
+[target]
+    ip = 127.0.0.1
+    ipv6 = ::1
+    ports = 1-1023
+    mac =  A4:BB:6D:E1:86:C2
+
+
+[me]
+    ip = 127.0.0.1
+    ipv6 = ::1
+    ports = 65432
+    mac = A4:BB:6D:E1:86:C2
