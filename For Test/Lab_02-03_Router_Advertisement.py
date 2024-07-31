@@ -22,12 +22,12 @@ dst_ipv6 = cno.ipv6_str_to_bin("ff02::1")  	  # Target IPv6 address: all nodes
 #dst_ipv6 = target_ipv6 = ipv6_str_to_bin("a:c:7:9::18")  # Target IPv6 address
 
 # Source
-src_mac = cno.mac_str_to_bin("00:50:56:01:44:c2")   		# Host MAC
-src_ipv6 = cno.ipv6_str_to_bin("fe80::c1e9:e063:fd82:fdb7")	# Host IPv6 address
+src_mac = cno.mac_str_to_bin("00:50:56:01:4e:df")   		# Host MAC
+src_ipv6 = cno.ipv6_str_to_bin("fe80::d419:bd42:16fb:a917")	# Host IPv6 address
 
 
 # Bad Prefix
-bad_ipv6_prefix = cno.ipv6_str_to_bin("9:9:9:c::")
+bad_ipv6_prefix = cno.ipv6_str_to_bin("5:5:5:c::")
 
 
 # ICMPv6 and ICMPv6 Options
@@ -36,8 +36,8 @@ icmpv6_hdr += b"\x00"             	# Code: 0
 icmpv6_hdr += b"\x00" * 2         	# Checksum
 icmpv6_hdr += b"\x40"             	# Current Hop Limit: 64
 icmpv6_hdr += b"\x00"             	# Flags: No flags set
-icmpv6_hdr += b"\x00\x78"         	# Router Lifetime: 120
-icmpv6_hdr += b"\x00\x00\x00\x78"	# Reachable Time: 120
+icmpv6_hdr += b"\x0e\x10"         	# Router Lifetime: 120
+icmpv6_hdr += b"\x00\x00\x0e\x10"	# Reachable Time: 120
 icmpv6_hdr += b"\x00\x00\x00\x00"  	# Retrans Time: 0
 
 # Prefix Information option

@@ -27,8 +27,8 @@ It's defined in /usr/linux/x86_64-linux-gnu/bits/in.h
 
 
 # Configure address info for connection
-dst_ip = "FF02::777:777:777"
-dst_port = 7777
+dst_ip = "FF02::111:C"
+dst_port = 1337
 
 # Create and configure UDP socket (DGRAM)
 my_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
