@@ -28,7 +28,7 @@ def reciever(dst_ip, dst_port):
     my_sock = socket.socket(socket.AF_INET6, socket.SOCK_DGRAM)
 
     # This is optional to allow multiple 
-    my_sock = socket.socket(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    my_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
     # Bind it to the port
     my_sock.bind(('', dst_port))
