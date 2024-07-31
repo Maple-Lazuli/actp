@@ -1,6 +1,21 @@
 import numpy as np
 from copy import deepcopy
+import json
 
+with open("actions.json", "r") as file_in:
+    action_mapper = json.load(file_in)
+
+def arr_to_str(b):
+    big_s = ""
+    for i in range(b.shape[0]):
+        s = ""
+        for j in range(b.shape[1]):
+            s += str(b[i][j])
+        big_s += "\n" + s
+    return big_s.strip()
+
+def arr_to_int(board):
+    return int("".join([str(b) for b in board.flatten()]),2)
 
 def get_blocked_spots(matrix):
     count = 0
@@ -79,25 +94,15 @@ class Environment:
     def __init__(self, size=3):
         self.board = np.zeros((size, size))
         self.size = size
-        self.turn = 1
 
-    def update(self, square):
-        self.board[square] = self.turn
-        self.turn *= -1
+    def update(self, new_board):
+        self.board = deepcopy(new_board)
 
     def reset(self):
-        self.board = np.zeros((self.size, self.size))
-        self.turn = 1
+        self.board = np.zeros((20, 10))
 
     def board_to_state(self):
-        n_states = 3 ** (self.size ** 2)
-        state = 0
-
-        for x in self.board.flatten():
-            state += ((x + 1) / self.size) * n_states
-            n_states /= self.size
-
-        return int(state)
+        return arr_to_int(self.board)
 
     def get_state(self):
         return {
