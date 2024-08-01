@@ -112,7 +112,7 @@ def generate_operations():
     return operations
 
 
-
+# First Attempt at making a bot decide a move.
 def get_best_candidate_old(candidates):
     len_score = 1000
     most_lines = 0
@@ -169,9 +169,9 @@ def get_best_candidate_old(candidates):
             if candidate['score'] >= best_score:
                 can = candidate
                 best_score = candidate['score']
-                    
-        return can
+    return can
     
+# Second attempt at deciding a best candidate
 def get_best_candidate(candidates):
 
     most_lines = 0

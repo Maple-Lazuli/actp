@@ -1,0 +1,3 @@
+﻿  Nasm building  student.nasm
+C:\Users\student\Desktop\workarea\Assembly\Windows\AsmLabs64\student.nasm(201): warning : label alone on a line without a colon might be in error
+  AsmLabs64.vcxproj -> C:\Users\student\Desktop\workarea\Assembly\Windows\x64\Debug\AsmLabs64.exe

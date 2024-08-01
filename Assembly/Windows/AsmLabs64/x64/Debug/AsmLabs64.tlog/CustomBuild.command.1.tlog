@@ -1,0 +1,4 @@
+^C:\USERS\STUDENT\DESKTOP\WORKAREA\ASSEMBLY\WINDOWS\ASMLABS64\STUDENT.NASM
+nasm.exe -f win64 -Xvc -o "C:\Users\student\Desktop\workarea\Assembly\Windows\x64\Debug\student.obj" "C:\Users\student\Desktop\workarea\Assembly\Windows\AsmLabs64\student.nasm"
+^C:\USERS\STUDENT\DESKTOP\WORKAREA\ASSEMBLY\WINDOWS\ASMLABS64\VALIDATE.NASM
+nasm.exe -f win64 -Xvc -o "C:\Users\student\Desktop\workarea\Assembly\Windows\x64\Debug\validate.obj" "C:\Users\student\Desktop\workarea\Assembly\Windows\AsmLabs64\validate.nasm"
