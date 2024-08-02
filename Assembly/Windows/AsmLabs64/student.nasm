@@ -270,7 +270,7 @@ lab3_1:
 ;   PRESERVE: All except RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	xchg AL, AH
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_1_size dq $-lab3_1 -1
@@ -281,7 +281,9 @@ lab3_2:
 ;   PRESERVE: All except RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	rol RAX, 8
+	mov DL, AL
+	ror RAX, 8
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_2_size dq $-lab3_2 -1
@@ -293,7 +295,7 @@ lab3_3:
 ;   PRESERVE: All except RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	movzx RAX, AX
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_3_size dq $-lab3_3 -1
@@ -304,7 +306,7 @@ lab3_4:
 ;   PRESERVE: All except RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	shr RAX, 6
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_4_size dq $-lab3_4 -1
@@ -327,7 +329,30 @@ lab3_5:
 ;   ex. xor eax, eax ; RAX = 0
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+	
+	mov CL, AL
+	ror CL, 8
+	rol RAX, 16
+	rol RCX, 16
 
+	mov CL, AL
+	ror CL, 8
+	rol RAX, 16
+	rol RCX, 16
+
+	mov CL, AL
+	ror CL, 8
+	rol RAX, 16
+	rol RCX, 16
+
+	mov CL, AL
+	ror CL, 8
+	rol RAX, 16
+	rol RCX, 16
+
+	mov RAX, RCX
+
+		
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_5_size dq $-lab3_5 -1
@@ -341,7 +366,9 @@ lab4_1:
 ;   PRESERVE: RCX, RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	mov [RCX], RAX
+	mov RAX, RBX
+	mov RBX, [RCX]
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_1_size dq $-lab4_1 -1
@@ -356,6 +383,8 @@ lab4_2:
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
 
+	movzx rbx, byte[rbx]
+	mov [rax], rbx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_2_size dq $-lab4_2 -1
@@ -367,7 +396,7 @@ lab4_3:
 ;   PRESERVE: RBX, RCX, RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	lea RAX, [RCX + RBX]
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_3_size dq $-lab4_3 -1
@@ -379,6 +408,12 @@ lab4_4:
 ;   PRESERVE: RAX, RBX, RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+
+	mov rcx, 64
+	.copyLoop:
+	mov byte [rax + rcx], cl
+	loop .copyLoop
+	mov byte[rax], cl
 
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
@@ -416,7 +451,10 @@ lab5_1:
 ;   PRESERVE: All but RAX, RBX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	push RAX
+	push RBX
+	pop RAX
+	pop RBX
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab5_1_size dq $-lab5_1 -1
@@ -429,11 +467,11 @@ lab5_2:
 ;
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
+	add RSP, 0x800
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab5_2_size dq $-lab5_2 -1
-
+	
 lab5_3:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;  BONUS _lab  ;;;;;;;;;;;;

@@ -6,6 +6,7 @@ import numpy as np
 import random
 import shutil
 import matplotlib.pyplot as plt
+import brick_code as bc
 
 
 class Agent:
@@ -42,10 +43,10 @@ class Agent:
         epsilon = max(self.epsilon[0], min(self.epsilon[1], self.num_episodes / (self.current_episode + 1)))
         return epsilon
 
-    def act(self, board):
+    def act(self, board, block, offset):
         epsilon = self.get_epsilon()
 
-        available_moves = get_available_moves(board)
+        available_moves = bc.get_moves(board, block, offset)
 
         if np.random.random() < epsilon:
             action = random.choice(available_moves)
@@ -60,9 +61,10 @@ class Agent:
     def update(self, reward):
         # Update q-table
         for current_state, action, new_state in self.episode_memory:
-            self.q_table[current_state, action] = self.q_table[current_state, action] + self.lr * (
-                    reward + max(self.q_table[new_state]) - self.q_table[current_state, action])
-
+            self.q_table[current_state][action] = self.q_table[current_state][action] + self.lr * (
+                    reward + max([self.q_table[new_state][k] for k in self.q_table[new_state]]) -
+                    self.q_table[current_state][action])
+                            
         self.episode_memory = []
         self.current_episode += 1
         self.metrics(reward)
@@ -88,10 +90,24 @@ class Agent:
             }, file_out)
 
 
-    def perform(self, board):
+    def perform(self, board, block, offset):
         # use q table to find the best move
         # here q table will basically be a dict of dicts
         # get a available moves given the current board
         # return the move with the highest score
 
-        return action
+        moves = bc.get_moves(board, block, offset)
+        seen_moves = self.q_table[bc.arr_to_int(board)]
+
+        best_move= ""
+        best_move_score = 0
+        for move in moves:
+            # moves is currently a list of dicts, need to
+            # translate to a seen_moves key in the q table
+            q_key = move['op'] + move['block_type']
+            if q_key in seen_moves.key():
+                if seen_moves[q_key] >= best_move_score:
+                    best_move = move
+                    best_move_score = seen_moves[q_key] 
+
+        return best_move

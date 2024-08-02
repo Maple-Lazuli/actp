@@ -1,7 +1,7 @@
 import argparse
 
-from src.agent import Agent
-from src.environment import Environment
+from agents import Agent
+from environment import Environment
 
 
 def main(flags):
@@ -9,10 +9,11 @@ def main(flags):
     lr = flags.gamma
     epsilon = (flags.epsilon_low, flags.epsilon_high)
     name = flags.name
-    size = flags.size
 
-    agent = Agent(state_size=3, action_size=size ** 2, name=name, lr=lr, epsilon=epsilon)
-    env = Environment(size=size)
+    server_ip = 'localhost'
+    server_port = 9999
+    agent = Agent(name=name, lr=lr, epsilon=epsilon)
+    env = Environment()
 
     for episode in range(num_episodes):
         env.reset()
@@ -77,6 +78,16 @@ if __name__ == "__main__":
     parser.add_argument('--size', type=int,
                         default=3,
                         help="The size of the grid")
+    
+    parser.add_argument('--size', type=int,
+                        default=3,
+                        help="The size of the grid")
+    
+    parser.add_argument('--size', type=int,
+                        default=3,
+                        help="The size of the grid")
+    
+    
 
     flags, unparsed = parser.parse_known_args()
 

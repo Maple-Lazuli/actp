@@ -1,6 +1,22 @@
 import numpy as np
 from copy import deepcopy
 
+def arr_to_str(b):
+    big_s = ""
+    for i in range(b.shape[0]):
+        s = ""
+        for j in range(b.shape[1]):
+            s += str(b[i][j])
+        big_s += "\n" + s
+    return big_s.strip()
+
+def arr_to_int(board):
+    return int("".join([str(b) for b in board.flatten()]),2)
+
+def get_lines_busted(raw_response:bytes):
+    return int(raw_response.split()[-2].decode().split("/")[0])
+
+
 def get_blocked_spots(matrix):
     count = 0
     for idx in range(2, matrix.shape[0]):
@@ -61,6 +77,45 @@ def get_current_board(sample):
         lines[i] = [0 if l == " " else 1 for l in lines[i]]
     return np.array(lines)
 
+def get_moves(board, block, offset):
+    block_type = arr_to_str(block)
+
+    candidates = []
+    for op in generate_operations():
+        offset_x = offset
+        
+        bo = deepcopy(board)
+        bl = deepcopy(block)
+        
+        offset_x += op.count('r')
+        offset_x -= op.count('l')
+        
+        if 'q' in op:
+            bl = np.rot90(bl)
+            bl = np.rot90(bl)
+            bl = np.rot90(bl)
+        elif 'cc' in op:
+            bl = np.rot90(bl)
+            bl = np.rot90(bl)
+        elif 'c' in op:
+            bl = np.rot90(bl)
+        if offset_x < 0:
+            continue
+        if offset_x > 10:
+            continue
+        try:
+            offset_y = 0
+            for _ in range(min(18,20-bl.shape[0])):
+                sub = bo[offset_y:(bl.shape[0]+offset_y), offset_x:(bl.shape[1]+offset_x)]
+                if np.any((sub + bl) == 2):
+                    break
+                offset_y +=1
+            bo[offset_y:(bl.shape[0]+offset_y), offset_x:(bl.shape[1]+offset_x)] = bl
+        except:
+            pass
+        candidates.append({'op':op, 'block_type':block_type})
+        
+    return candidates
 
 def get_candidates(board, block, offset):
     candidates = []

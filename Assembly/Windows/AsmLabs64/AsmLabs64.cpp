@@ -26,21 +26,21 @@ int main(int argc, char* argv[])
 	validate_lab2_2();
 	validate_lab2_3();
 	validate_lab2_4(); //BONUS
-/*	MOVE THIS COMMENT TO ENABLE FUTURE LABS
+
 	validate_lab3_1();
 	validate_lab3_2();
 	validate_lab3_3();
 	validate_lab3_4();
-	validate_lab3_5(); //SINGLE OR DOUBLE BONUS (will print if achieved)
+	//validate_lab3_5(); //SINGLE OR DOUBLE BONUS (will print if achieved)
 
 	validate_lab4_1();
 	validate_lab4_2();
 	validate_lab4_3();
 	validate_lab4_4();
-	validate_lab4_5(); //BONUS
+	//validate_lab4_5(); //BONUS
 
 	validate_lab5_1();
-	validate_lab5_2();
+	validate_lab5_2();/*	MOVE THIS COMMENT TO ENABLE FUTURE LABS
 	validate_lab5_3(); // Bonus
 
 	validate_lab6_1();
