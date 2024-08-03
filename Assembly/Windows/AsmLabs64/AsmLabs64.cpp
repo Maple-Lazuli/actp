@@ -17,44 +17,45 @@ int main(int argc, char* argv[])
 
 	lab0_1();
 
-	
-
 	validate_lab1_1();
 	validate_lab1_2();
 	validate_lab1_3();
+
 	validate_lab2_1();
 	validate_lab2_2();
 	validate_lab2_3();
 	validate_lab2_4(); //BONUS
-
+		
 	validate_lab3_1();
 	validate_lab3_2();
 	validate_lab3_3();
 	validate_lab3_4();
-	//validate_lab3_5(); //SINGLE OR DOUBLE BONUS (will print if achieved)
-
-	validate_lab4_1();
+	validate_lab3_5(); //SINGLE OR DOUBLE BONUS (will print if achieved)
+	
+ 	validate_lab4_1();
 	validate_lab4_2();
 	validate_lab4_3();
 	validate_lab4_4();
-	//validate_lab4_5(); //BONUS
+	validate_lab4_5(); //BONUS
 
+	
 	validate_lab5_1();
-	validate_lab5_2();/*	MOVE THIS COMMENT TO ENABLE FUTURE LABS
+	validate_lab5_2();
 	validate_lab5_3(); // Bonus
 
+	
 	validate_lab6_1();
 	validate_lab6_2();
-
-	validate_lab6_3();
-	validate_lab6_4(); //BONUS
-	validate_lab6_5();
+	
+	//validate_lab6_3();
+	//validate_lab6_4(); //BONUS
+	//validate_lab6_5();
 
 	validate_lab7_1();
 	validate_lab7_2();
 	validate_lab7_3(); //BONUS
 	//lab7_4();// BONUS: manully validated
-
+/* MOVE THIS COMMENT TO ENABLE FUTURE LABS
     validate_lab8_1();
 	validate_lab8_2();
 	validate_lab8_3();

@@ -1,5 +1,5 @@
 BITS 64			;you must specify bits mode
-segment .text   ;you must specify a section
+segment .text   ;you must specify a section 
 
 GLOBAL lab0_1, labSize0_1
 
@@ -64,9 +64,9 @@ lab0_1:
 ; GOAL:
 ;   Put a breakpoint in the code
 ; STEPS:
-;   Run this with F5, what happens?
+;   Run this with F5,  what happens?
 ;   Then try running this again with CTRL-F5
-;   Use CTRL-F5 for all future labs
+;   use CTRL-F5 for all future labs
 ;;;;;;;;;;;;; YOUR CODE BELOW
 	;int3
 ;;;;;;;;;;;;; YOUR CODE ABOVE
@@ -79,9 +79,9 @@ lab1_1:
 ;   PRESERVE: nothing
 ;       Do -NOT- use xchg
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	mov RDX, RAX
-	mov RAX, RBX
-	mov RBX, RDX
+	mov rcx, rax
+	mov rax, rbx
+	mov rbx, rcx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab1_1_size dq $-lab1_1 -1
@@ -90,11 +90,11 @@ lab1_2:
 ; GOAL:
 ;   Perform this action:
 ;     RAX = RBX + RCX + 0x42
-;   PRESERVE: All other registers
+;   PRESERVE: All others
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	mov RAX, 0x42
-	add RAX, RBX
-	add RAX, RCX
+	mov rax, 0x42
+	add rax, rbx
+	add rax, rcx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab1_2_size dq $-lab1_2 -1
@@ -108,24 +108,22 @@ lab1_3:
 ;   Exchange values in registers RAX and RBX
 ;   PRESERVE: All but RAX and RBX
 ;
-;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	xchg RAX, RBX
+	xchg rax, rbx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab1_3_size dq $-lab1_3 -1
 
 
 lab2_1:
-; NEW INSTRUCTION: jmp <labEL>
+; NEW INSTRUCTION: jmp <label>
 ;
 ; GOAL:
 ;   Use a single jmp instruction to create an infinite loop.
 ;   PRESERVE: all registers
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	.MyLabel:
-		jmp .MyLabel
+	jmp short lab2_1
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab2_1_size dq $-lab2_1 -1
@@ -141,10 +139,10 @@ lab2_2:
 ;   else
 ;      RBX = 2
 ;
-;   if( RCX == 42 )
-;      RDX = 1
+;   if( rcx == 42 )
+;      rdx = 1
 ;   else
-;      RDX = 2
+;      rdx = 2
 ;
 ;   PRESERVE: RAX, RCX, R10
 ;
@@ -171,35 +169,18 @@ lab2_2:
 ;    BONUS: Use the minimum number of instructions!
 ;    NOTE: That is a DECIMAL 42, not hex 42.
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	.Start_RAX_Comp:
-		cmp RAX, 42
-		je .RAX_is_42
-		jne .RAX_is_not_42
+	mov 	rbx, 2
+	cmp 	rax, 42
+	jne 	.secondCompare
 
-	.RAX_is_42:
-		mov RBX, 1
-		jmp .End_RAX_Comp
+	mov 	rbx, 1
 
-	.RAX_is_not_42:
-		mov RBX, 2
-		jmp .End_RAX_Comp
-
-	.End_RAX_Comp:
-		jmp .Start_RCX_Comp
-
-	.Start_RCX_Comp:
-		cmp RCX, 42
-		je .RCX_is_42
-		jne .RCX_is_not_42
-
-	.RCX_is_42:
-		mov RDX, 1
-		jmp .End_RCX_Comp
-	.RCX_is_not_42:
-		mov RDX, 2
-		jmp .End_RCX_Comp
-	.End_RCX_Comp
-
+.secondCompare:
+	mov 	rdx, 2
+	cmp 	rcx, 42
+	jne 	.exitFunction
+	mov 	rdx, 1
+.exitFunction:
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab2_2_size dq $-lab2_2 -1
@@ -223,13 +204,12 @@ lab2_3:
 ;   if it is more than a second or two, something is wrong!
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	mov RCX, 0
+	mov rcx, 0
 
-	.DoLoop:
-		add RCX, 5
-		cmp RCX, RAX
-		jne .DoLoop
-
+.addLoop:
+	add rcx, 5
+	cmp rcx, rax
+	jne .addLoop
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab2_3_size dq $-lab2_3 -1
@@ -241,28 +221,28 @@ lab2_4:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
 ; GOAL:
-;   Multiply 333 by 51 using only the instructions discussed so far!
+;   Multiply 333 by 51 using only the instructions
+;    discussed so far!
 ;   Store the result in RAX.
 ;
 ;   PRESERVE: RBX, RDX
 ;
-;   HINT: You will only need one loop
+;   HINT: you will only need one loop
 ;   HINT2: Once you've done it with one loop, can you "cheat" to make it smaller
-;          WITHOUT using any opcodes not covered in the class (i.e. the multiply opcode)
+;          WITHOUT using any opcodes not covered in the class (ie the multiply opcode)
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	mov RCX, 1
-	mov RAX, 333
+	mov rax, 0
+	mov rcx, 0
 
-	.DoLoop:
-		add RCX, 1
-		add RAX, 333
-		cmp RCX, 51
-		jne .DoLoop
-	
-	
+.addLoop:
+	add rax, 333
+	add rcx, 1
+	cmp rcx, 51
+	jne .addLoop
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab2_4_size dq $-lab2_4 -1
+
 
 lab3_1:
 ; GOAL:
@@ -270,7 +250,7 @@ lab3_1:
 ;   PRESERVE: All except RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	xchg AL, AH
+	xchg al, ah
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_1_size dq $-lab3_1 -1
@@ -281,9 +261,8 @@ lab3_2:
 ;   PRESERVE: All except RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	rol RAX, 8
-	mov DL, AL
-	ror RAX, 8
+	mov rdx, rax
+	shr rdx, 56
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_2_size dq $-lab3_2 -1
@@ -295,7 +274,7 @@ lab3_3:
 ;   PRESERVE: All except RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	movzx RAX, AX
+	movzx rax, ax
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_3_size dq $-lab3_3 -1
@@ -306,7 +285,7 @@ lab3_4:
 ;   PRESERVE: All except RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	shr RAX, 6
+	shr rax, 6
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_4_size dq $-lab3_4 -1
@@ -329,46 +308,34 @@ lab3_5:
 ;   ex. xor eax, eax ; RAX = 0
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	
-	mov CL, AL
-	ror CL, 8
-	rol RAX, 16
-	rol RCX, 16
+;    bswap rax    ; this is the simplest :)
+    mov rcx, rax ; copy of rax in rcx  rax=0xfedcba9876543210    rcx=0xfedcba9876543210
+    shr rcx, 32  ; ecx has the upper half of rax rax=0xfedcba9876543210 rcx=0xfedcba98
 
-	mov CL, AL
-	ror CL, 8
-	rol RAX, 16
-	rol RCX, 16
+    xchg cl, ch  ; swap byte of cl and ch rcx= 0xfedc98ba
+    ror ecx, 16  ; rotate upper half or ecx into cx rcx=0x98bafedc
+    xchg cl, ch  ; swap byte of cl and ch rcx=0x98badcfe
 
-	mov CL, AL
-	ror CL, 8
-	rol RAX, 16
-	rol RCX, 16
-
-	mov CL, AL
-	ror CL, 8
-	rol RAX, 16
-	rol RCX, 16
-
-	mov RAX, RCX
-
-		
+    xchg ah, al  ; rax=0xfedcba9876541032
+    ror eax, 16  ; !!! this will zero out top half of rax!!! rax=0x10327654
+    xchg ah, al  ; rax=0x10325476
+    shl rax, 32  ; rax=0x1032547600000000
+    or rax, rcx  ; rax=0x1032547698badcfe
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab3_5_size dq $-lab3_5 -1
 
-
 lab4_1:
 ; GOAL: Exchange RAX and RBX using:
-;	- ONLY MOV instructions
-;   - The memory pointed to by RCX as temp storage for the swap
+;	-ONLY MOV instructions
+;   -the memory pointed to by RCX as temp storage for the swap
 ;
 ;   PRESERVE: RCX, RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	mov [RCX], RAX
-	mov RAX, RBX
-	mov RBX, [RCX]
+	mov [rcx], rax
+	mov rax, rbx
+	mov rbx, [rcx]
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_1_size dq $-lab4_1 -1
@@ -382,7 +349,6 @@ lab4_2:
 ;   PRESERVE: RAX, RCX, RDX, value pointed to by RBX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-
 	movzx rbx, byte[rbx]
 	mov [rax], rbx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
@@ -396,7 +362,7 @@ lab4_3:
 ;   PRESERVE: RBX, RCX, RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	lea RAX, [RCX + RBX]
+    lea rax, [rbx + rcx]
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_3_size dq $-lab4_3 -1
@@ -408,16 +374,16 @@ lab4_4:
 ;   PRESERVE: RAX, RBX, RDX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+	mov		rcx, 64
+.copyLoop:
+	mov		byte [rax+rcx], cl
+	loop	.copyLoop
 
-	mov rcx, 64
-	.copyLoop:
-	mov byte [rax + rcx], cl
-	loop .copyLoop
-	mov byte[rax], cl
-
+	mov		byte [rax], cl
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_4_size dq $-lab4_4 -1
+
 
 lab4_5:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -439,7 +405,19 @@ lab4_5:
 ;   PRESERVE: RAX, RBX, Memory at RAX.
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+	xor 	ecx, ecx ; set to zero
 
+.copyLoop:
+	mov 	dl, [rax+rcx]
+	cmp 	dl, 0
+	je      .doneCopyingString
+
+	mov 	[rbx+rcx+2],dl
+	inc 	rcx
+	jmp 	.copyLoop
+
+.doneCopyingString:
+	mov 	[rbx], cx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab4_5_size dq $-lab4_5 -1
@@ -451,10 +429,10 @@ lab5_1:
 ;   PRESERVE: All but RAX, RBX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	push RAX
-	push RBX
-	pop RAX
-	pop RBX
+	push 	rax
+	push 	rbx
+	pop 	rax
+	pop 	rbx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab5_1_size dq $-lab5_1 -1
@@ -467,11 +445,11 @@ lab5_2:
 ;
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
-	add RSP, 0x800
+	add rsp,0x800
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab5_2_size dq $-lab5_2 -1
-	
+
 lab5_3:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;  BONUS _lab  ;;;;;;;;;;;;
@@ -484,10 +462,27 @@ lab5_3:
 ;   PRESERVE: All registers but RAX
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+	;;preserve registers
+	push rcx
+	push rdx
+	xor rcx, rcx ; set to zero
 
+.copyLoop:
+	mov dl, [rax+rcx]
+	mov [rbx+rcx], dl
+	inc rcx
+	cmp dl, 0
+	jne .copyLoop
+
+	mov rax, rcx
+	dec rax
+	;put registers back
+	pop rdx
+	pop rcx
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
 lab5_3_size dq $-lab5_3 -1
+
 
 lab6_1:
 ; GOAL:
@@ -502,6 +497,21 @@ lab6_1:
 ;   PRESERVE: standard Windows registers
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+	push RDX
+	mov RAX, 0
+
+	mov dl, [RAX + RCX]
+	cmp dl, 0
+	je .End
+	.CountLoop:
+		inc RAX
+		mov dl, [RAX + RCX]
+		cmp dl, 0
+		jne .CountLoop
+
+	.End:
+	pop RDX
+	ret
 
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab6_1_size dq $-lab6_1
@@ -518,7 +528,15 @@ lab6_2:
 ;   PRESERVE: standard callee save registers
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+	mov RAX,0
 
+	add RAX, RCX
+	add RAX, RDX
+	add RAX, R8
+	add RAX, R9
+	add RAX, [RSP + 0x28]
+
+	ret
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab6_2_size dq $-lab6_2
 
@@ -554,6 +572,37 @@ extern my_memcpy
 
 ;;;;;;;;;;;;; YOUR CODE BELOW
 
+	sub RSP, 0x28
+	push RBX
+	push R12
+	push R13
+
+	mov RBX, RCX
+
+	call my_strlen; get the string length
+	inc RAX;
+	
+	mov RCX, RAX; copy the size to RCX for malloc
+	mov R12, RAX; save the size
+
+	call my_malloc; allocate space, RAX should be a pointer to the allocated memory
+
+	mov R13, RAX
+	;Because RCX could change.
+	mov RCX, RAX; RAX is the desination
+	mov RDX, RBX; RBX is the source
+	mov R8, R12; R12 is the size
+
+	call my_memcpy; copy RDX to RCX
+
+	MOV RAX, R13
+	pop R13
+	pop R12
+	pop RBX
+	add RSP, 0x28
+	
+	ret
+	
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab6_3_size dq $-lab6_3
 
@@ -583,6 +632,26 @@ lab6_4:
 
 	%define QWORD_SIZE	8
 
+	xor rax, rax
+
+	; Save registers to shadow space and walk the number of registers
+	mov [rsp + 0x08], rcx
+	mov [rsp + 0x10], rdx
+	mov [rsp + 0x18], r8
+	mov [rsp + 0x20], r9
+	lea rdx, [rsp + rcx*QWORD_SIZE + QWORD_SIZE]
+
+.loop:
+	cmp rcx, 0
+	je .doneLooping
+	add rax, [rdx]
+	sub rdx, QWORD_SIZE
+	dec rcx
+	jmp .loop
+
+.doneLooping:
+	ret
+
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab6_4_size dq $-lab6_4
 
@@ -597,8 +666,15 @@ lab6_4_size dq $-lab6_4
 ;
 ; NOTE: Does not get validated
 ;;;;;;;;;;;;; YOUR CODE BELOW
+lab6_5_string db "Assembly rocks!", 0x0a, 0x00
+extern printf
 lab6_5:
 
+	sub rsp, 0x28 ; Allocate shadow space.
+	lea rcx, [rel lab6_5_string]
+	call printf
+	add rsp, 0x28
+	ret
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab6_5_size dq $-lab6_5
 
@@ -619,6 +695,24 @@ lab7_1:
     push rbp
     mov rbp, rsp
 ;;;;;;;;;;;;; YOUR CODE BELOW
+
+	xor rax, rax
+
+	add rax, rcx
+
+	add rax, rdx
+
+	add rax, r8
+
+	add rax, r9
+
+	add rax, [rbp + 0x30]
+
+	add rax, [rbp + 0x38]
+
+	add rax, [rbp + 0x40]
+
+	;mov rsp, rbp
 
 ;;;;;;;;;;;;; YOUR CODE ABOVE
     pop rbp
@@ -664,6 +758,34 @@ lab7_2:
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
 
+    %define QWORD_SIZE 8
+    %define max_length r8
+    %define szA rcx
+    %define szB rdx
+	%define curIndex r9
+
+    xor curIndex, curIndex ; set to zero
+	xor eax, eax ; set to zero
+
+.cmpLoop:
+    cmp curIndex, max_length ; Compare count to max length
+    je .exitFunction
+
+    mov r10b, [szA+curIndex]
+    cmp r10b, [szB+curIndex]
+    jne .stringsMismatch
+
+    cmp r10b, 0
+    je  .exitFunction
+
+    inc curIndex
+    jmp .cmpLoop
+
+.stringsMismatch:
+    inc rax
+.exitFunction:
+    ret
+
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab7_2_size dq $-lab7_2
 
@@ -684,6 +806,35 @@ lab7_3:
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
 
+extern my_malloc
+extern my_strlen
+extern my_memcpy
+%define param  [rbp - 0x08]
+%define length [rbp - 0x10]
+%define buffer [rbp - 0x18]
+    push rbp
+    mov rbp, rsp
+    sub rsp, 0x40
+
+    mov param, rcx
+    call my_strlen
+    inc rax ; include the null!
+    mov length, rax
+
+    mov rcx, rax ; Set up the argument to my_malloc
+    call my_malloc
+
+    mov buffer, rax
+    mov r8, length ; arg3
+    mov rdx, param ; arg2
+    mov rcx, rax ; arg1
+    call my_memcpy
+    mov rax, buffer
+
+    add rsp, 0x40
+    pop rbp
+    ret
+
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 lab7_3_size dq $-lab7_3
 
@@ -698,6 +849,19 @@ lab7_4:
 ;     PRESERVE: standard callee save registers
 ;
 ;;;;;;;;;;;;; YOUR CODE BELOW
+
+;lab7_4_string db "%p", 0x0a, 0x00
+;extern printf
+;lab7_4:;
+;	sub rsp, 0x28
+;
+;	mov rcx, lab7_4_string;
+;	mov rdx, [rsp+0x28]			; the return address is beyond the shadow space
+;
+;	call printf
+;
+;	add rsp, 0x28
+;	ret
 
 ;;;;;;;;;;;;; YOUR CODE ABOVE
 	ret
