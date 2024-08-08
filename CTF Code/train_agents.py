@@ -1,46 +1,47 @@
 import argparse
-
+import time
 from agents import Agent
 from environment import Environment
 
+import socket
 
 def main(flags):
     num_episodes = flags.episodes
     lr = flags.gamma
     epsilon = (flags.epsilon_low, flags.epsilon_high)
     name = flags.name
-
-    server_ip = 'localhost'
-    server_port = 9999
     agent = Agent(name=name, lr=lr, epsilon=epsilon)
     env = Environment()
 
     for episode in range(num_episodes):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.connect(("pyctf.class.net", 8086))
         env.reset()
+        env.update(s.recv(2048))
         state = env.get_state()['state']
         board = env.get_state()['board']
-        turn = env.get_state()['turn']
+        block = env.get_state()['block']
+        offset = env.get_state()['offset']
 
-        while not env.is_done():
-            action, action_square = agent.act(board, state, turn)
+        while not env.done:
+                action = agent.act(board, block, offset)
+                s.send(f'{action['op']}\n'.encode())
+                time.sleep(.05)
+                res = s.recv(2048)
+                env.update(res)
 
-            env.update(action_square)
+                next_state = env.get_state()['state']
 
-            next_state = env.get_state()['state']
+                agent.step(state, action, next_state)
 
-            agent.step(state, action, next_state)
-
-            state = next_state
+                state = env.get_state()['state']
+                board = env.get_state()['board']
+                block = env.get_state()['block']
+                offset = env.get_state()['offset']
 
         agent.update(env.get_state()['reward'])
-
-        if episode % 10000 == 0:
-            try:
-                agent.print_metrics()
-            except:
-                pass
-
-    agent.save()
+        print(f"Finished Episode: {episode} with a reward of: {env.get_state()['reward']}")
+        agent.save()
 
 
 if __name__ == "__main__":
@@ -64,7 +65,7 @@ if __name__ == "__main__":
                         help="The number of episodes to complete")
 
     parser.add_argument('--gamma', type=float,
-                        default=0.01,
+                        default=0.001,
                         help="The learning rate")
 
     parser.add_argument('--epsilon_high', type=float,
@@ -72,23 +73,9 @@ if __name__ == "__main__":
                         help="The upper end for the exploration exploitation")
 
     parser.add_argument('--epsilon_low', type=float,
-                        default=0.01,
+                        default=0.001,
                         help="The lower end for the exploration exploitation")
-
-    parser.add_argument('--size', type=int,
-                        default=3,
-                        help="The size of the grid")
     
-    parser.add_argument('--size', type=int,
-                        default=3,
-                        help="The size of the grid")
-    
-    parser.add_argument('--size', type=int,
-                        default=3,
-                        help="The size of the grid")
-    
-    
-
     flags, unparsed = parser.parse_known_args()
 
     main(flags)

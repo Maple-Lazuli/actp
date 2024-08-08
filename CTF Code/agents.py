@@ -8,10 +8,12 @@ import shutil
 import matplotlib.pyplot as plt
 import brick_code as bc
 
+with open("actions.json", "r") as file_in:
+    actions = json.load(file_in)
 
 class Agent:
 
-    def __init__(self, state_size, action_size, random_seed=101011, lr=0.01, epsilon=(0.01, 1.0), num_episodes=10000,
+    def __init__(self, random_seed=101011, lr=0.01, epsilon=(0.01, 1.0), num_episodes=10000,
                  name="Agent"):
         """
         Instantiate the Agent Class
@@ -23,15 +25,12 @@ class Agent:
         :param epsilon: The exploration exploitation balancing.
         """
         self.name = name
-        self.state_size = state_size
-        self.action_size = action_size
-        self.action_size_base = int(sqrt(action_size))
         self.random_seed = random_seed
         self.lr = lr
         self.epsilon = epsilon
         self.num_episodes = num_episodes
         self.current_episode = 0
-        self.q_table = np.zeros((state_size ** action_size, action_size))
+        self.q_table = dict()
 
         self.past_results = []
 
@@ -51,16 +50,22 @@ class Agent:
         if np.random.random() < epsilon:
             action = random.choice(available_moves)
         else:
-            action = self.perform(board)
+            action = self.perform(board, block, offset)
 
         return action
 
     def step(self, state, action, next_state):
-        self.episode_memory.append([state, action, next_state])
+        self.episode_memory.append([state, action['block_type'], next_state])
 
     def update(self, reward):
         # Update q-table
+        # might need to update the q-table action space to be the cartesian product of blocks * actions 
         for current_state, action, new_state in self.episode_memory:
+            if current_state not in self.q_table:
+                self.add_state_to_q(current_state)
+            if new_state not in self.q_table:
+                self.add_state_to_q(new_state)
+
             self.q_table[current_state][action] = self.q_table[current_state][action] + self.lr * (
                     reward + max([self.q_table[new_state][k] for k in self.q_table[new_state]]) -
                     self.q_table[current_state][action])
@@ -86,7 +91,8 @@ class Agent:
                 "name": self.name,
                 "time": str(datetime.datetime.now()),
                 "lr": self.lr,
-                "epsilon": f'{self.epsilon[0]} - {self.epsilon[1]}'
+                "epsilon": f'{self.epsilon[0]} - {self.epsilon[1]}',
+                "q_table": self.q_table
             }, file_out)
 
 
@@ -97,7 +103,12 @@ class Agent:
         # return the move with the highest score
 
         moves = bc.get_moves(board, block, offset)
-        seen_moves = self.q_table[bc.arr_to_int(board)]
+        # might need to verify whether the state is in the q table or not.
+        state_mapping = bc.arr_to_int(board)
+        if state_mapping not in self.q_table:
+                self.add_state_to_q(state_mapping)
+        
+        seen_moves = self.q_table[state_mapping]
 
         best_move= ""
         best_move_score = 0
@@ -111,3 +122,8 @@ class Agent:
                     best_move_score = seen_moves[q_key] 
 
         return best_move
+
+    def add_state_to_q(self, state):
+        self.q_table[state] = dict()
+        for action in actions:
+            self.q_table[state][action] = 0
